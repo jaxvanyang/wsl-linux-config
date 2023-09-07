@@ -7,7 +7,7 @@ on:
       - main
       - 6.1.y
     tags:
-      - v*.*.*
+      - v*
     paths-ignore:
       - LICENSE
       - README.md
