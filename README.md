@@ -18,7 +18,7 @@ diff WSL2-Linux-Kernel/Microsoft/config-wsl config-wsl
 If you want to try the same configuration as mine, you can just copy the
 [config-wsl](./config-wsl) as `.config` to your WSL kernel source tree and
 compile it. Or you can download the prebuilt kernel and modules from the
-[release page]().
+[release page](https://github.com/jaxvanyang/wsl-linux-config/releases).
 
 > [!NOTE]
 > Please see the documentation on the
