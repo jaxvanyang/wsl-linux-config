@@ -4,10 +4,10 @@ LINUX := WSL2-Linux-Kernel
 MAKEFILE := ${LINUX}/Makefile
 CONFIG := ${LINUX}/.config
 KERNEL := ${LINUX}/arch/x86/boot/bzImage
+MODULES_DIR := lib/modules
 MAKE := make -C ${LINUX}
 PREFIX ?= $${PWD}
 REVISION ?=
-TMP_DIR ?= /tmp/wsl-linux-config
 
 define get_version
 	file ${1} | sed -E 's/^.*version ([^ ]*).*$$/\1/'
@@ -18,12 +18,11 @@ build: ${KERNEL}
 install: ${KERNEL}
 	cp $^ "${PREFIX}/bzImage-$$($(call get_version,$^))${REVISION}"
 
-modules.tar.xz: ${TMP_DIR}/lib
-	tar cavf $@ -C ${TMP_DIR} lib
+modules.tar.xz: ${MODULES_DIR}
+	tar cavf $@ -C $^ .
 
-${TMP_DIR}/lib: ${KERNEL}
-	mkdir -p ${TMP_DIR}
-	sudo ${MAKE} INSTALL_MOD_PATH=${TMP_DIR} modules_install
+${MODULES_DIR}: ${KERNEL}
+	${MAKE} INSTALL_MOD_PATH=$${PWD} modules_install
 
 modules_install: ${KERNEL}
 	${MAKE} modules_install
@@ -42,6 +41,6 @@ ${MAKEFILE}:
 	git submodule update --init
 
 clean: ${MAKEFILE}
-	${MAKE} clean
 	-rm -f ${CONFIG} *.xz
-	-sudo rm -rf ${TMP_DIR}
+	-rm -rf lib
+	${MAKE} clean
