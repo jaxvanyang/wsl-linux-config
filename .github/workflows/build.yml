@@ -1,0 +1,46 @@
+name: Build & Release
+permissions:
+  contents: write
+on:
+  push:
+    branches:
+      - main
+      - 6.1.y
+    tags:
+      - v*.*.*
+  pull_request:
+    branches:
+      - main
+      - 6.1.y
+  workflow_dispatch:
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Install Dependencies
+        run: |
+          DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
+            build-essential flex bison dwarves libssl-dev libelf-dev
+      - name: Build Kernel & Modules
+        run: |
+          make build
+          make modules.tar.xz
+      - name: Archive Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: wsl-linux-build
+          path: |
+            WSL2-Linux-Kernel/arch/x86/boot/bzImage
+            modules.tar.xz
+      - name: Release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            WSL2-Linux-Kernel/arch/x86/boot/bzImage
+            modules.tar.xz
