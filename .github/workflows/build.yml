@@ -29,18 +29,19 @@ jobs:
       - name: Build Kernel & Modules
         run: |
           make build
+          make PREFIX="${PWD}" install
           make modules.tar.xz
       - name: Archive Build Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: wsl-linux-build
           path: |
-            WSL2-Linux-Kernel/arch/x86/boot/bzImage
+            bzImage-*
             modules.tar.xz
       - name: Release
         if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            WSL2-Linux-Kernel/arch/x86/boot/bzImage
+            bzImage-*
             modules.tar.xz
