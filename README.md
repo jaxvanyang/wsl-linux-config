@@ -14,6 +14,10 @@ what changes I made:
 diff WSL2-Linux-Kernel/Microsoft/config-wsl config-wsl
 ```
 
+> [!NOTE]
+> I have also added the `config-wsl.diff` and the kernel config `.config` file
+> in the GitHub releases.
+
 ## Installation
 If you want to try the same configuration as mine, you can just copy the
 [config-wsl](./config-wsl) as `.config` to your WSL kernel source tree and

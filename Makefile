@@ -1,8 +1,9 @@
-.PHONY: build install modules_install version config clean
+.PHONY: build install modules_install version diff config clean
 
 LINUX := WSL2-Linux-Kernel
-MAKEFILE := ${LINUX}/Makefile
+MS_CONFIG := ${LINUX}/Microsoft/config-wsl
 CONFIG := ${LINUX}/.config
+DIFF := config-wsl.diff
 KERNEL := ${LINUX}/arch/x86/boot/bzImage
 MODULES_DIR := lib/modules
 MAKE := make -C ${LINUX}
@@ -33,14 +34,20 @@ version: ${KERNEL}
 ${KERNEL}: ${CONFIG}
 	${MAKE} -j $$(nproc) 
 
-${CONFIG}: ${MAKEFILE} config-wsl
+diff: ${DIFF}
+${DIFF}: ${MS_CONFIG} config-wsl
+	-diff $^ > $@
+
+config: ${CONFIG}
+${CONFIG}: ${MS_CONFIG} config-wsl
 	cp config-wsl $@
 	${MAKE} olddefconfig
 
-${MAKEFILE}:
+${MS_CONFIG}:
 	git submodule update --init
 
-clean: ${MAKEFILE}
+clean:
 	-rm -f ${CONFIG} *.xz
 	-rm -rf lib
-	${MAKE} clean
+	-rm *.diff
+	-${MAKE} clean

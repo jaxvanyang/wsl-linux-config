@@ -37,6 +37,7 @@ jobs:
           make build
           make PREFIX="${PWD}" install
           make modules.tar.xz
+          make diff
       - name: Archive Build Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -44,6 +45,8 @@ jobs:
           path: |
             vmlinuz-*
             modules.tar.xz
+            *.diff
+            WSL2-Linux-Kernel/.config
       - name: Release
         if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v1
@@ -51,3 +54,5 @@ jobs:
           files: |
             vmlinuz-*
             modules.tar.xz
+            *.diff
+            WSL2-Linux-Kernel/.config
