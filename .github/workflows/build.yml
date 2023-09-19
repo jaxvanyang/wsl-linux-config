@@ -42,12 +42,12 @@ jobs:
         with:
           name: wsl-linux-build
           path: |
-            bzImage-*
+            vmlinuz-*
             modules.tar.xz
       - name: Release
         if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            bzImage-*
+            vmlinuz-*
             modules.tar.xz
