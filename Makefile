@@ -16,7 +16,7 @@ endef
 build: ${KERNEL}
 
 install: ${KERNEL}
-	cp $^ "${PREFIX}/bzImage-$$($(call get_version,$^))${REVISION}"
+	cp $^ "${PREFIX}/vmlinuz-$$($(call get_version,$^))${REVISION}"
 
 modules.tar.xz: ${MODULES_DIR}
 	tar cavf $@ -C $^ .
